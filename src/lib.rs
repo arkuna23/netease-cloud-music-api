@@ -5,6 +5,7 @@
 //
 mod encrypt;
 pub(crate) mod model;
+pub mod scrobble;
 use anyhow::{anyhow, Result};
 use encrypt::{Crypto, XeapiPublicKeyState};
 pub use isahc::cookies::{CookieBuilder, CookieJar};
@@ -12,6 +13,10 @@ use isahc::{prelude::*, *};
 use lazy_static::lazy_static;
 pub use model::*;
 use regex::Regex;
+pub use scrobble::{
+    PlaybackEvent, PlaybackEventKind, PlaybackSource, ScrobbleContext, ScrobbleError,
+    ScrobbleReceipt,
+};
 use std::{
     collections::HashMap,
     path::PathBuf,
