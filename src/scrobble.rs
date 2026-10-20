@@ -35,6 +35,7 @@ pub enum PlaybackEventKind {
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct PlaybackSource {
     pub id: String,
+    /// Origin category (e.g. list or album), independent of the NCBL track category.
     pub kind: String,
     pub name: String,
 }
@@ -252,7 +253,7 @@ fn record(context: &ScrobbleContext, event: &PlaybackEvent) -> anyhow::Result<St
         "is_heart":0, "resource_ratio":"", "resource_time":event.duration.as_secs(),
         "bitrate_level":event.quality, "_addrefer":"", "_multirefers":[],
         "vipType":context.fields.get("vipType").cloned().unwrap_or_default(),
-        "file":4, "rightSource":0, "sourceId":event.source.id, "sourcetype":event.source.kind,
+        "file":4, "rightSource":0, "sourceId":event.source.id, "sourcetype":"track",
         "libra_abt":"", "channel":"netease", "curStartChannel":""
     });
     let action = match event.kind {
@@ -475,6 +476,8 @@ mod tests {
             (Some(12), Some(180))
         );
         assert_eq!(data["sourceId"], "7");
+        assert_eq!(data["source"], "list");
+        assert_eq!(data["sourcetype"], "track");
         assert_eq!(data["bitrate"], 320);
         let receipt = acknowledge(
             &json!({"code":200,"data":{"successfiles":["op_1"]}}),
